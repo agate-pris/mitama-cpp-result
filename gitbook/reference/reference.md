@@ -322,65 +322,97 @@ This constructor shall not participate in overload resolution unless `is_result_
 
 **Example**
 
+```cpp
 auto sq = [](unsigned x) -> Result<unsigned, unsigned> { return Ok(x * x); };
 auto err = [](unsigned x) -> Result<unsigned, unsigned> { return Err(x); };
 assert_eq(Ok(2u).and_then(sq).and_then(sq), Ok(16u));
 assert_eq(Ok(2u).and_then(sq).and_then(err), Err(4u));
 assert_eq(Ok(2u).and_then(err).and_then(sq), Err(2u));
 assert_eq(Err(3u).and_then(sq).and_then(sq), Err(3u));
+```
+
 ## err() [1/2]
+
+```cpp
 template<class T, class E>
 constexpr std::optional<E> mitama::Result<T, E>::err()const &
-inline
-Converts from Result<T, E> to std::optional<E>.
+```
 
-Converts self into an std::optional<E>, copying self, and discarding the success value, if any.
+Converts from `Result<T, E>` to `std::optional<E>`.
 
-Example
+Converts self into an `std::optional<E>`, copying self, and discarding the success value, if any.
+
+**Example**
+
+```cpp
 Result<unsigned, std::string> x = Ok(2);
 assert_eq(x.err(), None);
 Result<unsigned, std::string> y = Err("Nothing here");
 assert_eq(y.err(), Some("Nothing here"));
+```
+
 ## err() [2/2]
+
+```cpp
 template<class T, class E>
 constexpr std::optional<E> mitama::Result<T, E>::err()&&
-inline
-Converts from Result<T, E> to std::optional<E>.
+```
 
-Converts self into an std::optional<E>, consuming self, and discarding the success value, if any.
+Converts from `Result<T, E>` to `std::optional<E>`.
+
+Converts self into an `std::optional<E>`, consuming self, and discarding the success value, if any.
 
 ## is_err()
+
+```cpp
 template<class T, class E>
-constexpr bool mitama::Result<T, E>::is_err()const
-inlinenoexcept
+constexpr bool mitama::Result<T, E>::is_err()const noexcept
+```
+
 Returns true if the result is Err.
 
-Example
-Result<uint32_t, std::string> x = Ok(-3);
-assert(x.is_err(), false);
-Result<uint32_t, std::string> y = Err("Some error message");
-assert_(y.is_err(), true);
-## is_ok()
-template<class T, class E>
-constexpr bool mitama::Result<T, E>::is_ok()const
-inlinenoexcept
-Returns true if the result is Ok.
+**Example**
 
-Example
+```cpp
+Result<uint32_t, std::string> x = Ok(-3);
+assert_eq(x.is_err(), false);
+Result<uint32_t, std::string> y = Err("Some error message");
+assert_eq(y.is_err(), true);
+```
+
+## is_ok()
+
+```cpp
+template<class T, class E>
+constexpr bool mitama::Result<T, E>::is_ok()const noexcept
+```
+
+Returns true if the result is `Ok`.
+
+**Example**
+
+```cpp
 Result<uint32_t, std::string> x = Ok(-3);
 assert(x.is_ok(), true);
 Result<uint32_t, std::string> y = Err("Some error message");
 assert(y.is_ok(), false);
+```
+
 ## map()
+
+```cpp
 template<class T, class E>
 template<class O >
 constexpr auto mitama::Result<T, E>::map(O && op)const & -> std::enable_if_t<std::is_invocable_v<O, T>, Result<std::invoke_result_t<O, T>, E>>
-inline
-Maps a Result<T, E> to Result<U, E> by applying a function to a contained Ok value, leaving an Err value untouched.
+```
+
+Maps a `Result<T, E>` to `Result<U, E>` by applying a function to a contained `Ok` value, leaving an `Err` value untouched.
 
 This function can be used to compose the results of two functions.
 
-Example
+**Example**
+
+```cpp
 std::string line = "1,3,5,7";
 for (auto num : split(line, ","))
 {
@@ -389,16 +421,23 @@ for (auto num : split(line, ","))
     assert_true(res.ok().value() % 2 == 0);
   }
 }
+```
+
 ## map_err()
+
+```cpp
 template<class T, class E>
 template<class O >
 constexpr auto mitama::Result<T, E>::map_err(O && op)const & -> std::enable_if_t<std::is_invocable_v<O, E>, Result<T, std::invoke_result_t<O, E>>>
-inline
-Maps a Result<T, E> to Result<T, F> by applying a function to a contained Err value, leaving an Ok value untouched.
+```
+
+Maps a `Result<T, E>` to `Result<T, F>` by applying a function to a contained Err value, leaving an Ok value untouched.
 
 This function can be used to pass through a successful result while handling an error.
 
-Example
+**Example**
+
+```cpp
 auto stringify = [](unsigned x) -> std::string{
   return "error code: "s + std::to_string(x);
 };
@@ -406,24 +445,36 @@ Result<unsigned, unsigned> x = Ok(2);
 assert_eq(x.map_err(stringify), Ok(2u));
 Result<unsigned, unsigned> y = Err(13);
 assert_eq(y.map_err(stringify), Err("error code: 13"s));
+```
+
 ## ok() [1/2]
+
+```cpp
 template<class T, class E>
 constexpr std::optional<T> mitama::Result<T, E>::ok()const &
-inline
-Converts from Result<T, E> to std::optional<T>.
+```
 
-Converts self into an std::optional<T>, copying self, and discarding the error, if any.
+Converts from `Result<T, E>` to `std::optional<T>`.
 
-Example
+Converts self into an `std::optional<T>`, copying self, and discarding the error, if any.
+
+**Example**
+
+```cpp
 Result<unsigned, std::string> x = Ok(2);
 assert_eq(x.err(), None);
 Result<int, std::string> y = Err("Nothing here");
 assert_eq(y.err(), Some("Nothing here"));
+```
+
 ## ok() [2/2]
+
+```cpp
 template<class T, class E>
 constexpr std::optional<T> mitama::Result<T, E>::ok()&&
-inline
-Converts from Result<T, E> to std::optional<T>.
+```
+
+Converts from `Result<T, E>` to `std::optional<T>`.
 
 Converts self into an std::optional<T>, comsuming self, and discarding the error, if any.
 
