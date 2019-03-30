@@ -30,3 +30,4 @@
     * [operator==](api/equality.md)
 * [Meta Function Reference](meta/README.md)
     * [is_result](meta/is_result.md)
+    * [is_result_with](meta/is_result_with.md)
