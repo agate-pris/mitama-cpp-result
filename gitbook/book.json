@@ -1,0 +1,16 @@
+{
+    "plugins": [
+        "katex",
+        "hints",
+        "hide-published-with",
+        "etoc"
+    ],
+    "pluginsConfig": {
+        "etoc": {
+          "h2lb": 3,
+          "mindepth": 3,
+          "maxdepth": 4,
+          "notoc": false
+        }
+    }
+}
