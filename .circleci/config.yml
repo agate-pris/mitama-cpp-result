@@ -1,52 +1,104 @@
 version: 2.1
-executors:
-  default:
-    docker:
-      - image: buildpack-deps:bionic-curl
-  test-env:
-    parameters:
-      compiler:
-        description: "compiler-version"
-        default: "clang-7.0.0"
-        type: string
-    docker:
-      - image: enumack/mitama-env:<< parameters.compiler >>
 
-jobs:
-  full-test:
-    description: Testing the library using Catch2
-    parameters:
-      compiler:
-        description: "compiler-version"
-        default: "clang-7.0.0"
-        type: string
-    executor:
-      name: test-env
-      compiler: << parameters.compiler >>
-    steps:
-      - checkout
-      - run: apt upgrade -y && apt update -y && apt install -y git
-      - run: git submodule update --init --recursive
-      - run: mkdir build && cd build && cmake .. &&  make && ./tests
+orbs:
+  catch2: # Library Integration
+    jobs:
+      build_and_test: # Test Config
+        parameters:
+          compiler:
+            description: compiler-version
+            type: string
+            default: clang-7.0.1
+        executor:
+            name: test_executor
+            compiler: <<parameters.compiler>>
+        steps:
+          - test_command
+    commands: # Inline Test Commands Snip
+      test_command:
+        steps:
+          - checkout
+          - run: apt upgrade -y && apt update -y && apt install -y git
+          - run: git submodule update --init --recursive
+          - run: mkdir build && cd build && cmake .. &&  make && ./tests
+    executors: # Executors for Library Integration
+      test_executor:
+        parameters:
+          compiler:
+            type: string
+        docker:
+          - image: enumack/mitama-env:<<parameters.compiler>>
+
+  gitbook: # Document Integration
+    jobs:
+      test_book: # Sample Code Integration
+        executor: test_executor
+        steps:
+          - checkout
+          - run: |
+              apt upgrade -y && apt update -y && apt install -y git
+              git submodule update --init --recursive
+              find gitbook -type f -name \*.md | xargs awk -v i='0' '/\/\/ begin example$/,/\/\/ end example$/ { if($0 !~ "\/\/ .* example$") { print $0 >> FILENAME "-" i ".cpp" } else if ($0 ~ "\/\/ begin example$") { i++ } }'
+              find gitbook -type f -name \*.cpp | xargs -I{} $CXX -I./include/ -I./result/include/ {} -std=c++17
+
+      build_book: # Document Build
+        executor: gitbook
+        steps:
+          - add_ssh_keys:
+              fingerprints:
+                - "dc:68:d6:9a:fc:29:a4:12:35:89:3e:ca:ac:9f:02:d6"
+          - checkout
+          - run: |
+              cd gitbook
+              gitbook install
+              gitbook build
+          - store_artifacts:
+              path: /gitbook/_book/
+              destination: "docs-${CIRCLE_BUILD_NUM}"
+          - run: apt upgrade -y && apt update -y && apt install -y git
+          - run: |
+              git config --global user.name LoliGothick
+              git config --global user.email loligothick@gmail.com
+              pwd
+              cd gitbook/_book/
+              git init
+              git commit --allow-empty -m '[ci skip] update docs'
+              git checkout -b gh-pages
+              git add .
+              git commit -am '[ci skip] update docs'
+              git push --force https://${GITHUB_PERSONAL_TOKEN}@github.com/LoliGothick/mitama-cpp-result gh-pages
+    executors: # Inline Executors for Document Integration
+      gitbook:
+        docker:
+          - image: enumack/mitama-env:gitbook
+      test_executor:
+        docker:
+          - image: enumack/mitama-env:clang-8.0.0
 
 workflows:
-  build:
+  build-test:
     jobs:
-      - full-test:
-          compiler: clang-7.0.1
-      - full-test:
-          compiler: clang-7.0.0
-      - full-test:
+      - catch2/build_and_test:
           compiler: clang-8.0.0
-      - full-test:
-          compiler: gcc-8.3
-      - full-test:
+      - catch2/build_and_test:
+          compiler: clang-7.0.1
+      - catch2/build_and_test:
+          compiler: clang-7.0.0
+      - catch2/build_and_test:
+          compiler: clang-6.0.1
+      - catch2/build_and_test:
+          compiler: clang-6.0.0
+      - catch2/build_and_test:
           compiler: gcc-8.2
-      - full-test:
+      - catch2/build_and_test:
           compiler: gcc-8.1
-      - full-test:
+      - catch2/build_and_test:
           compiler: gcc-7.3
-      - full-test:
+      - catch2/build_and_test:
           compiler: gcc-7.2
-      - full-test:
+      - catch2/build_and_test:
           compiler: gcc-7.1
+      - gitbook/test_book
+      - gitbook/build_book:
+          requires:
+            - gitbook/test_book
