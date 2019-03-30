@@ -1,10 +1,11 @@
 # Introduction
 
-## Prerequisites and installation
-
 Result is a header only C++17 library for error handling.
 
-Prerequisites and installation
+
+## Prerequisites and installation
+
+
 | Compiler/Toolchain |                      Status                       |
 | :----------------: | :-----------------------------------------------: |
 |   clang >= 5.0.0   | Testing on Wandbox; tested on each push to GitHub |
