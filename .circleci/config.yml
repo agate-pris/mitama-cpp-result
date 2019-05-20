@@ -24,7 +24,7 @@ orbs: # Inline Orbs for Document Integration
         steps:
           - add_ssh_keys:
               fingerprints:
-                - "dc:68:d6:9a:fc:29:a4:12:35:89:3e:ca:ac:9f:02:d6"
+                - 4a:90:3d:e3:42:bf:40:df:f2:99:5d:f0:aa:2d:c8:68
           - checkout
           - run: |
               mkdocs build
@@ -37,7 +37,7 @@ orbs: # Inline Orbs for Document Integration
         steps:
           - add_ssh_keys:
               fingerprints:
-                - "dc:68:d6:9a:fc:29:a4:12:35:89:3e:ca:ac:9f:02:d6"
+                - 4a:90:3d:e3:42:bf:40:df:f2:99:5d:f0:aa:2d:c8:68
           - checkout
           - run: apt upgrade -y && apt update -y && apt install -y git
           - run: |
