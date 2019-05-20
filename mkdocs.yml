@@ -1,0 +1,82 @@
+site_name: Mitama.Result User Manual
+site_dir: '../docs/'
+
+# Project information
+site_name: Mitama.Result | User Manual
+site_description: Mitama.Result C++17 Library
+site_author: mitama
+site_url: https://loligothick.github.io/mitama-cpp-result/
+
+# Repository
+repo_name: loligothick/mitama-cpp-result
+repo_url: https://github.com/loligothick/mitama-cpp-result
+edit_uri: ""
+
+# Theme
+theme:
+  name: 'material'
+  language: 'en'
+  logo:
+    icon: 'donut_small'
+  palette:
+    primary: 'teal'
+    accent: 'teal'
+  feature:
+    tabs: true
+extra:
+  social:
+    - type: 'twitter'
+      link: 'https://twitter.com/mitama_rs'
+markdown_extensions:
+  - admonition
+  - codehilite
+  - fontawesome_markdown
+  - footnotes
+  - meta
+  - pymdownx.inlinehilite
+  - pymdownx.magiclink
+  - pymdownx.superfences
+  - mdx_math:
+      enable_dollar_delimiter: true
+extra_javascript: 
+  - https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML
+  - mathjaxhelper.js
+extra_css:
+  - "https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css"
+  - cppmap_styles.css
+# Page tree
+nav:
+  - Home: README.md
+  - Result 101: Result101/README.md
+  - Class Reference:
+    - Ok: Result101/Ok/README.md
+    - constructors: Result101/Ok/constructors.md
+    - deduction guides: Result101/Ok/deduction_guides.md
+    - Err: Result101/Err/README.md
+    - constructors: Result101/Err/constructors.md
+    - deduction guides: Result101/Err/deduction_guides.md
+    - Result: Result101/Result/README.md
+    - constructors: Result101/Result/constructors.md
+  - API Reference:
+    - CHANGELOG: api/README.md
+    - is_ok: api/is_ok.md
+    - is_err: api/is_err.md
+    - ok: api/ok.md
+    - err: api/err.md
+    - map: api/map.md
+    - map_or_else: api/map_or_else.md
+    - map_err: api/map_err.md
+    - and: api/and.md
+    - and_then: api/and_then.md
+    - or: api/or.md
+    - or_else: api/or_else.md
+    - unwrap_or: api/unwrap_or.md
+    - unwrap_or_else: api/unwrap_or_else.md
+    - unwrap: api/unwrap.md
+    - unwrap_err: api/unwrap_err.md
+    - unwrap_or_default: api/unwrap_or_default.md
+    - transpose: api/transpose.md
+    - operator==: api/equality.md
+  - Meta Function Reference:
+      - is_result: meta/is_result.md
+      - is_result_with: meta/is_result_with.md
