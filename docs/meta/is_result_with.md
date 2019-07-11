@@ -6,15 +6,15 @@ struct is_result_with : std::false_type
 {
 };
 template <class T, class E>
-struct is_result_with<Result<T, E>, Ok<T>> : std::true_type
+struct is_result_with<result<T, E>, success<T>> : std::true_type
 {
 };
 template <class T, class E>
-struct is_result_with<Result<T, E>, Err<E>> : std::true_type
+struct is_result_with<result<T, E>, failure<E>> : std::true_type
 {
 };
 template <class T, class E>
-struct is_result_with<Result<T, E>, Ok<T>, Err<E>> : std::true_type
+struct is_result_with<result<T, E>, success<T>, failure<E>> : std::true_type
 {
 };
 template <class T, class... Requires>

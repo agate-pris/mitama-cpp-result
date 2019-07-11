@@ -1,51 +1,48 @@
 ## operator==() [1/3]
 
 ```cpp
-template<class T, class E>
-template<class U , class F >
-bool mitama::Result<T, E>::operator==(Result< U, F > const & rhs)const &
+template <mutability _, class U , class F>
+bool basic_result<_, T, E>::operator==(basic_result<_, U, F> const& rhs) const& ;
 ```
 
-Operator== for `Result<T, E>` and `Result<U, F>`.
+Equality comparison for `basic_result<_, T, E>` and `basic_result<_, U, F>`.
 
 **Remarks**
 
-This operator shall be defined as deleted unless `std::declval<T const&>() == std::declval<U const&>()` is valid expression and `std::declval<E const&>() == std::declval<F const&>()` is valid expression.
+This operator shall not participate in overload resolution unless `std::declval<T const&>() == std::declval<U const&>()` is valid expression and `std::declval<E const&>() == std::declval<F const&>()` is valid expression.
 
 ## operator==() [2/3]
 
 ```cpp
-template<class T, class E>
-template<class U >
-bool mitama::Result<T, E>::operator==(Ok< U > const & rhs)const
+template <class U>
+bool result::operator==(success<U> const& rhs) const&
 ```
 
-Operator== for `Result<T, E>` and `Ok<U>`.
+Equality comparison for `basic_result<_, T, E>` and `success<U>`.
 
 **Returns**
 
-true if this has `Ok` value `this->unwrap()` equals `rhs` value, otherwise `false`.
+`true` if this has `success` value `this->unwrap()` equals `rhs` value, otherwise `false`.
 
 **Remarks**
 
-This operator shall be defined as deleted unless `std::declval<T const&>() == std::declval<U const&>()` is valid expression.
+This operator shall not participate in overload resolution unless `std::declval<T const&>() == std::declval<U const&>()` is valid expression.
 
 
 ## operator==() [3/3]
 
 ```cpp
-template<class T, class E>
-template<class F >
-bool mitama::Result<T, E>::operator==(Err< F > const & rhs)const
+template <class F >
+bool basic_result::operator==(failure<F> const& rhs) const&
 ```
 
-Operator== for `Result<T, E>` and `Err<F>`.
+Equality comparison for `basic_result<_, T, E>` and `failure<F>`.
 
 **Returns**
 
-`true` if this has `Err` value `this->unwrap_err()` equals `rhs` value, otherwise `false`.
+`true` if this has `failure` value `this->unwrap_err()` equals `rhs` value, otherwise `false`.
 
 **Remarks**
 
-This operator shall be defined as deleted unless `std::declval<E const&>() == std::declval<F const&>()` is valid expression.
+This operator shall not participate in overload resolution unless `std::declval<E const&>() == std::declval<F const&>()` is valid expression.
 

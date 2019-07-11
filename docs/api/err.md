@@ -1,31 +1,41 @@
-## err() [1/2]
+## err()
 
 ```cpp
-template<class T, class E>
-constexpr std::optional<E> mitama::Result<T, E>::err()const &
+constexpr auto result<T, E>::err() &
+    -> boost::optional<const E> ;
+
+constexpr auto result<T, E>::err() const &
+    -> boost::optional<const E> ;
+
+constexpr auto result<T, E>::err() &&
+    -> boost::optional<const E> ;
+
+constexpr auto mut_result<T, E>::err() &
+    -> boost::optional<E> ;
+
+constexpr auto mut_result<T, E>::err() const &
+    -> boost::optional<const E> ;
+
+constexpr auto mut_result<T, E>::err() &&
+    -> boost::optional<E> ;
 ```
 
-Converts from `Result<T, E>` to `std::optional<E>`.
+Converts from `basic_result` to `boost::optional`.
 
-Converts self into an `std::optional<E>`, copying self, and discarding the success value, if any.
+Converts self into an `boost::optional`, and discarding the success value, if any.
+
+Note that these functions propagate mutability to optional element types.
 
 **Example**
 
 ```cpp
-Result<unsigned, std::string> x = Ok(2);
-assert_eq(x.err(), None);
-Result<unsigned, std::string> y = Err("Nothing here");
-assert_eq(y.err(), Some("Nothing here"));
+result<unsigned, std::string> x = success(2);
+assert(x.err() == None);
+result<unsigned, std::string> y = failure("Nothing here");
+assert(y.err() == Some("Nothing here"));
 ```
 
-## err() [2/2]
+**Remarks**
 
-```cpp
-template<class T, class E>
-constexpr std::optional<E> mitama::Result<T, E>::err()&&
-```
-
-Converts from `Result<T, E>` to `std::optional<E>`.
-
-Converts self into an `std::optional<E>`, consuming self, and discarding the success value, if any.
-
+If self is rvalue and `E` is a reference type,
+this function returns `boost::optional<dangling<std::reference_wrapper<std::remove_reference_t<E>>>>`.

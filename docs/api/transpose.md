@@ -1,22 +1,25 @@
 ## transpose() [since 1.2.0]
 
 ```cpp
-template < class T, class E >
-auto mitama::Result<T, E>::transpose()
-  -> std::optional<mitama::Result<T, E>>
+auto basic_result<_, std::optional<T>, E>::transpose()
+  -> std::optional<basic_result<_, T, E>> ;
+
+auto basic_result<_, boost::optional<T>, E>::transpose()
+  -> boost::optional<basic_result<_, T, E>> ;
 ```
 
-Transposes a `Result` of an `optional` into an `optional` of a `Result`.
+Transposes a `result` of an `optional` into an `optional` of a `result`.
 
-`Ok(nullopt)` will be mapped to `nullopt`.
-`Ok(optional(v))` and `Err(v)` will be mapped to `optional(Ok(v))` and `optional(Err(v))`.
 
-**Examples**
+`success(None)` will be mapped to `None`.
+`success(Some(v))` and `failure(v)` will be mapped to `optional(success(v))` and `optional(failure(v))`.
+
+**Example**
 
 ```cpp
-struct SomeErr{};
+struct SomeError{};
 
-Result<std::optional<int>, SomeErr> x = Ok(std::optional(5));
-std::optional<Result<int, SomeErr>> y = std::optional(Result<int, SomeErr>(Ok(5)));
+result<std::optional<int>, SomeError> x = success(std::optional(5));
+std::optional<result<int, SomeError>> y = std::optional(result<int, SomeError>(success(5)));
 assert_eq!(x.transpose(), y);
 ```

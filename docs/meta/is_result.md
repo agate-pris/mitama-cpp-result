@@ -6,7 +6,7 @@ struct is_result : std::false_type
 {
 };
 template <class T, class E>
-struct is_result<Result<T, E>> : std::true_type
+struct is_result<result<T, E>> : std::true_type
 {
 };
 template <class T>

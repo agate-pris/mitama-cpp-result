@@ -1,34 +1,34 @@
-## operator &&()
+## operator &&
 
 ```cpp
-template<class T, class E>
-template<class U >
-constexpr auto mitama::Result<T, E>::operator&&(Result< U, E > const & res)const & -> Result<U, E>
+template <mutability _, class U>
+constexpr auto basic_result<_, T, E>::operator&&(basic_result<_, U, E> const & res) const &
+  -> result<U, E> ;
 ```
 
-Returns res if the result is `Ok`, otherwise returns the `Err` value of self.
+Returns `res` if the result is `success`, otherwise returns the `failure` value of self.
 
 **Example**
 
 ```cpp
 {
-  Result<unsigned, std::string> x = Ok(2);
-  Result<std::string, std::string> y = Err("late error"s);
-  assert_eq(x && y, Err("late error"s));
+  result<unsigned, std::string> x = success(2);
+  result<std::string, std::string> y = failure("late error"s);
+  assert((x && y) == failure("late error"s));
 }
 {
-  Result<unsigned, std::string> x = Err("early error"s);
-  Result<std::string, std::string> y = Ok("foo"s);
-  assert_eq(x && y, Err("early error"s));
+  result<unsigned, std::string> x = failure("early error"s);
+  result<std::string, std::string> y = success("foo"s);
+  assert((x && y) == failure("early error"s));
 }
 {
-  Result<unsigned, std::string> x = Err("not a 2"s);
-  Result<std::string, std::string> y = Err("late error"s);
-  assert_eq(x && y, Err("not a 2"s));
+  result<unsigned, std::string> x = failure("not a 2"s);
+  result<std::string, std::string> y = failure("late error"s);
+  assert((x && y) == failure("not a 2"s));
 }
 {
-  Result<unsigned, std::string> x = Ok(2);
-  Result<std::string, std::string> y = Ok("different result type"s);
-  assert_eq(x && y, Ok("different result type"s));
+  result<unsigned, std::string> x = success(2);
+  result<std::string, std::string> y = success("different result type"s);
+  assert((x && y) == success("different result type"s));
 }
 ```

@@ -1,13 +1,13 @@
 ## unwrap_or_default()
 
 ```cpp
-template<class T, class E>
-T mitama::Result<T, E>::unwrap_or_default()const &
+auto basic_result<_, T, E>::unwrap_or_default() const &
+  -> T ;
 ```
 
 Returns the contained value or a default.
 
-If `Ok`, returns the contained value, otherwise if `Err`, returns the default value for that type.
+If `success`, returns the contained value, otherwise if `failure`, returns the default value for that type.
 
 **Remarks**
 

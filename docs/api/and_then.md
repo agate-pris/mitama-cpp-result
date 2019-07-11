@@ -1,33 +1,26 @@
 ## and_then()
 
 ```cpp
-template<class T, class E>
-template<class O >
-constexpr auto mitama::Result<T, E>::and_then(O && op) const &
+template <class O>
+constexpr auto basic_result<_, T, E>::and_then(O&& op)
+  -> std::invoke_result<O&&, T> ;
 ```
 
-Calls op if the result is Ok, otherwise returns the Err value of self.
+Calls `op` if the result is success, otherwise returns the failure value of self.
 
-This function can be used for control flow based on Result values.
-
-**Condition**
-
-```cpp
-// for all type U:
-std::invoke_result_t<O, T> => Result<U, E>
-```
+This function can be used for control flow based on result values.
 
 **Remarks**
 
-This constructor shall not participate in overload resolution unless `is_result_with_v<std::invoke_result_t<O, T>, Err<E>>` is true.
+This constructor shall not participate in overload resolution unless `is_result_with_v<std::invoke_result_t<O, T>, failure<E>>` is true.
 
 **Example**
 
 ```cpp
-auto sq = [](unsigned x) -> Result<unsigned, unsigned> { return Ok(x * x); };
-auto err = [](unsigned x) -> Result<unsigned, unsigned> { return Err(x); };
-assert_eq(Ok(2u).and_then(sq).and_then(sq), Ok(16u));
-assert_eq(Ok(2u).and_then(sq).and_then(err), Err(4u));
-assert_eq(Ok(2u).and_then(err).and_then(sq), Err(2u));
-assert_eq(Err(3u).and_then(sq).and_then(sq), Err(3u));
+auto sq = [](unsigned x) -> result<unsigned, unsigned> { return success(x * x); };
+auto err = [](unsigned x) -> result<unsigned, unsigned> { return failure(x); };
+assert(success(2u).and_then(sq).and_then(sq) == success(16u));
+assert(success(2u).and_then(sq).and_then(err) == failure(4u));
+assert(success(2u).and_then(err).and_then(sq) == failure(2u));
+assert(failure(3u).and_then(sq).and_then(sq) == failure(3u));
 ```
