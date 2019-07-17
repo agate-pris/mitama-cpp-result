@@ -7,16 +7,18 @@ CHANGELOG
 ### Types
 
 - `basic_result`
-  - {`Result<T, E>` => `basic_result<mutability, T, E>`}
-  - Enabled lvalue reference types for both of `T` and `E`.
-  - `result<T, E>` the alias template for immutable `basic_result`.
-  - `mut_result<T, E>` the alias template for mutable `basic_result`.
+    - {`Result<T, E>` => `basic_result<mutability, T, E>`}
+    - Enabled lvalue reference types for both of `T` and `E`
+    - `result<T, E>` the alias template for immutable `basic_result`
+    - `mut_result<T, E>` the alias template for mutable `basic_result`
+
 - `success`
-  - {`Ok<T>` => `success<T>`}
-  - Enabled lvalue reference types for `T`.
+    - {`Ok<T>` => `success<T>`}
+    - Enabled lvalue reference types for `T`.
+
 - `failure`
-  - {`Err<E>` => `failure<E>`}
-  - Enabled lvalue reference types for `E`.
+    - {`Err<E>` => `failure<E>`}
+    - Enabled lvalue reference types for `E`.
 
 ### New APIs
 
