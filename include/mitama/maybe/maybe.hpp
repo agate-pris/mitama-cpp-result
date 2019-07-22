@@ -450,17 +450,15 @@ class maybe
     }
 
     decltype(auto) unwrap() & {
-        if (is_just())
-            return storage_->deref();
-        else
+        if (is_nothing())
             PANIC("called `maybe::unwrap()` on a `nothing` value");
+        return storage_->deref();
     }
 
     decltype(auto) unwrap() const& {
-        if (is_just())
-            return storage_->deref();
-        else
+        if (is_nothing())
             PANIC("called `maybe::unwrap()` on a `nothing` value");
+        return storage_->deref();
     }
 
     T& get_or_insert(T const& v) & {
