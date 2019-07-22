@@ -449,13 +449,13 @@ class maybe
         return !this->is_just();
     }
 
-    decltype(auto) unwrap() & {
+    T& unwrap() & {
         if (is_nothing())
             PANIC("called `maybe::unwrap()` on a `nothing` value");
         return storage_->deref();
     }
 
-    decltype(auto) unwrap() const& {
+    T& unwrap() const& {
         if (is_nothing())
             PANIC("called `maybe::unwrap()` on a `nothing` value");
         return storage_->deref();
